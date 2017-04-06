@@ -95,32 +95,33 @@ class Session():
     self.accounts = pickle.load(open("accounts.p", "rb"))
 
   def handle_msg(self, data, connection):
+    print data
     #for email functionality
-    if data[1] == "email":
+    if "email" in data[1]:
       print ("email cmd recieved")
       self.emailcmd(connection, data)
 
     #for get message functionality
-    elif data[1] == "getmsg":
+    elif "getmsg" in data[1]:
       print("Get msg. cmd recieved")
       self.getmsgcmd(connection, data)
 
     #for count functionality
-    elif data[1] == "count":
+    elif "count" in data[1]:
       print("count cmd recieved")
       self.countcmd(connection, data)
 
     #for deleat message functionality
-    elif data[1] == "delmsg":
+    elif "delmsg" in data[1]:
       print("delmsg cmd recieved")
       self.delmsgcmd(connection, data)
 
     #for dump message functionality
-    elif data[1] == "dump":
+    elif "dump" in data[1]:
       print("dump cmd recieved")
       self.dumpcmd(connection, data)
     
-    elif data[1] == "logoff":
+    elif "logoff" in data[1]:
       print("logoff cmd recieved")
       self.logoffcmd(connectio)
 
@@ -181,7 +182,7 @@ class Session():
       -connect()
     """
     count = 0
-    for email in self.accounts[data[0]]:
+    for email in self.accounts[self.un]:
       count += 1
     connection.send("Total emails recived: " + str(count))
       
@@ -193,7 +194,20 @@ class Session():
     Called from the function(s):
       -connect()
     """
-    pass
+    counter = 0
+    sent = False
+    for email in self.accounts[self.un]:  # for all email in account
+      if data[2] in email[0]:
+        print data[2]
+        if data[3] in email[1]:             # email sender is equal to sepcied sender in cmd msg and email subject is equal to specified subject
+          self.accounts.pop(counter)
+          connection.send("Message deleated. Subject: " + data[3])
+          print("Email deleated: Subject: " + data[3])
+          sent = True  
+      counter += 1
+    if sent == False:
+      print("Email not found. Subject: " + data[3])
+      connection.send("Message not deleated. Email not found.") 
     
 
   def dumpcmd(self, connection, data):
@@ -205,7 +219,7 @@ class Session():
     """
 
     emails = ""
-    for email in self.accounts[data[0]]:
+    for email in self.accounts[self.un]:
       emails += ("Sender: " + str(email[0]) + "\n" + "Subject: " + str(email[1]) + "\n" + "Message: " + str(email[2]) + "\n" + str(email[3])+ "\n \n")
     connection.send(b"All emails recived:\n" + emails)
 

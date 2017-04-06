@@ -8,16 +8,17 @@ class socket_client():
 	
   def connect(self, user):
     self.sock.connect(self.server_address)
-    try:
-        message = user
-        self.sock.send(message)
+    message = user
+    self.sock.send(message)
+    try:    
         recieved = self.sock.recv(1024)
         print (str(recieved))
+    except not recieved:
+        self.sock.send(message)
+        print("No data recieved. Resending Handshake") 
     finally:
         pass
-        #print("in Finnally: Socket Closed")
-        #self.sock.close()
-        #self.session(receaved)
+ 
     recieved = recieved.split(":")
     if recieved[0] == "Session Started":
       ID = recieved[1]
@@ -30,14 +31,17 @@ class socket_client():
  
   def session(self, ID): 
     print("session started")
-    msg = (":email:huntc:Email Subject: This is my message. It is a good message. I think I should get more creative sometime. The End. --masterl")
+    msg = (":dump")
     self.sock.connect(self.server_address)
+    message = str(ID) + msg
+    message = bytes("{0}\0".format(message))  #code based off of code by Matt Jaddu
+    self.sock.send(message)
     try:
-      message = str(ID) + msg
-      message = bytes("{0}\0".format(message))  #code based off of code by Matt Jaddu
-      self.sock.send(message)
       receaved = self.sock.recv(1024)
-      print("Data Recieved from CMD send: " + str(receaved))
+      print("Data Recieved:: " + str(receaved))
+    except not receaved:
+      self.sock.send(message)
+      print("Data Not Received. Trying to resend command.")
     finally:
       print("Closing Socket- from session()")
       self.sock.close()
@@ -65,3 +69,4 @@ def main():
   sessionObj.session(session_ID) 
   
 main()
+

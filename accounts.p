@@ -74,22 +74,40 @@ aS' This is my message. It is a good message. I think I should get more creative
 p42
 aS'Fri Mar 24 09:51:41 2017'
 p43
-aasS'peterm'
-p44
-(lp45
-sS'jamest'
+aa(lp44
+S'6071020594'
+p45
+aS'Email Subject'
 p46
-(lp47
-(lp48
-S'huntc'
-p49
-aS'This is a cool subject'
+aS' This is my message. It is a good message. I think I should get more creative sometime. The End. --masterl\x00'
+p47
+aS'Tue Apr  4 05:44:47 2017'
+p48
+aa(lp49
+S'5815813584'
 p50
-aS'This is the email message that I sent to you James T'
+aS'Email Subject'
 p51
-aS'Thu Mar  9 10:29:44 2017'
+aS' This is my message. It is a good message. I think I should get more creative sometime. The End. --masterl\x00'
 p52
-aasS'masterl'
+aS'Tue Apr  4 05:59:49 2017'
 p53
-(lp54
+aasS'peterm'
+p54
+(lp55
+sS'jamest'
+p56
+(lp57
+(lp58
+S'huntc'
+p59
+aS'This is a cool subject'
+p60
+aS'This is the email message that I sent to you James T'
+p61
+aS'Thu Mar  9 10:29:44 2017'
+p62
+aasS'masterl'
+p63
+(lp64
 s.
