@@ -123,7 +123,7 @@ class Session():
     
     elif "logoff" in data[1]:
       print("logoff cmd recieved")
-      self.logoffcmd(connectio)
+      self.logoffcmd(connection)
 
     else:
       print("NA cmd recieved")
