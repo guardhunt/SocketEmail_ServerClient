@@ -124,6 +124,9 @@ class Session():
     elif "logoff" in data[1]:
       print("logoff cmd recieved")
       self.logoffcmd(connection)
+      
+    elif "help" in data[1]:
+      self.help_cmd(connection)
 
     else:
       print("NA cmd recieved")
@@ -150,7 +153,7 @@ class Session():
     else:
       #append email contnets to accounts dictionary value with key being the recipient
       #email values logged in form of [sender, subject, message, date/time]
-      self.accounts[data[2]].append([data[0], data[3], data[4], time.strftime("%c")])
+      self.accounts[data[2]].append([self.un, data[3], data[4], time.strftime("%c")])
       self.update_accounts()
       connection.send(b"Email sent to " + data[2])
 
@@ -200,7 +203,7 @@ class Session():
       if data[2] in email[0]:
         print data[2]
         if data[3] in email[1]:             # email sender is equal to sepcied sender in cmd msg and email subject is equal to specified subject
-          self.accounts.pop(counter)
+          self.accounts[self.un].pop(counter)
           connection.send("Message deleated. Subject: " + data[3])
           print("Email deleated: Subject: " + data[3])
           sent = True  
@@ -222,7 +225,15 @@ class Session():
     for email in self.accounts[self.un]:
       emails += ("Sender: " + str(email[0]) + "\n" + "Subject: " + str(email[1]) + "\n" + "Message: " + str(email[2]) + "\n" + str(email[3])+ "\n \n")
     connection.send(b"All emails recived:\n" + emails)
-
+    
+  def help_cmd(self, connection):
+    """
+    Takes in data of the form [ID, command]
+    Returns the help functionality
+    """
+    commands = "\nCommands: \nGet help: help \nSend email: email \nSearch for emails from user: getmsg \nGet number of mesages in inbox: count \nDeleat mesage by sender and subject: delmsg \nSee full email inbox: dump \nLog off of server: logoff\n"
+    connection.send(commands)
+    
   def logoffcmd(self, connection):
     self.logged_on = False
     connection.send(b"Successfully Logged Off User: " + str(self.un))
@@ -232,7 +243,7 @@ def main():
   Create server socket, bind ip and port, create sock_server instace, create accounts dictionary, then listen and connect on request.
   """
   sockip = ("localhost")
-  sockport =(8888)
+  sockport =(8883)
   sock_server = socket_server(sockip, sockport)
   sock_server.create_accounts()
   print("[Socket Server Started on Port " + str(sockport) + "]")

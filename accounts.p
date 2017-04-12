@@ -92,22 +92,67 @@ aS' This is my message. It is a good message. I think I should get more creative
 p52
 aS'Tue Apr  4 05:59:49 2017'
 p53
-aasS'peterm'
-p54
-(lp55
-sS'jamest'
+aa(lp54
+S'4117438716'
+p55
+aS'First msg to you peterm'
 p56
-(lp57
-(lp58
-S'huntc'
+aS'hey, how is it going. -huntc'
+p57
+aS'Tue Apr 11 13:24:33 2017'
+p58
+aasS'peterm'
 p59
-aS'This is a cool subject'
-p60
-aS'This is the email message that I sent to you James T'
-p61
-aS'Thu Mar  9 10:29:44 2017'
+(lp60
+(lp61
+S'9734936543'
 p62
-aasS'masterl'
+aS'first message'
 p63
-(lp64
+aS'hello frand, this is my first message to you'
+p64
+aS'Tue Apr 11 13:12:03 2017'
+p65
+aa(lp66
+S'huntc'
+p67
+aS'123'
+p68
+aS'msg. This is a cool msg. - huntc'
+p69
+aS'Tue Apr 11 13:30:50 2017'
+p70
+aa(lp71
+S'huntc'
+p72
+aS'subject'
+p73
+aS'email msg'
+p74
+aS'Tue Apr 11 13:32:55 2017'
+p75
+aasS'jamest'
+p76
+(lp77
+(lp78
+S'huntc'
+p79
+aS'This is a cool subject'
+p80
+aS'This is the email message that I sent to you James T'
+p81
+aS'Thu Mar  9 10:29:44 2017'
+p82
+aa(lp83
+S'huntc'
+p84
+aS'Test'
+p85
+aS'This is a test message'
+p86
+aS'Tue Apr 11 23:14:45 2017'
+p87
+aasS'masterl'
+p88
+(lp89
 s.
