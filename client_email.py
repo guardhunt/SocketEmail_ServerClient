@@ -7,7 +7,8 @@ class socket_client():
     self.port = port
     self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     self.server_address = (self.ip, int(self.port))
-    self.loggedon = False
+    self.logged_on = False
+    self.ID = 0
 	
   def connect(self, user):
     self.sock.connect(self.server_address)
@@ -24,20 +25,21 @@ class socket_client():
  
     recieved = recieved.split(":")
     if recieved[0] == "Session Started":
-      ID = recieved[1]
-      print("ID SPLIT: " + str(ID))
-      return(ID)
+      self.ID = recieved[1]
+      print("ID SPLIT: " + str(self.ID))
+      return(self.ID)
     else:
       print("Error: Exiting and Closing Socket")
       self.sock.close()
       exit()
  
   def session(self, ID): 
+    self.ID = ID
     print("Session started")
     self.logged_on = True
     while self.logged_on == True:
       cmd = self.get_cmd()
-      package = self.mng_cmd(cmd, ID)
+      package = self.mng_cmd(cmd)
       self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
       self.sock.connect(self.server_address)
       print(package)
@@ -56,25 +58,25 @@ class socket_client():
     cmd = str(cmd)
     return cmd
 
-  def mng_cmd(self, cmd, ID):
+  def mng_cmd(self, cmd):
     print("CMD " + str(cmd))
     if cmd == "email":
-      package = self.email_cmd(ID)
+      package = self.email_cmd()
     elif cmd == "getmsg":
-      package = self.getmsg_cmd(ID)
+      package = self.getmsg_cmd()
     elif cmd == "count":
-      package = self.count_cmd(ID)
+      package = self.count_cmd()
     elif cmd == "delmsg":
-      package = self.deleat_cmd(ID)
+      package = self.deleat_cmd()
     elif cmd == "dump":
-      package = self.dump_cmd(ID)
+      package = self.dump_cmd()
     elif cmd == "logoff":
-      package = self.logoff_cmd(ID)
+      package = self.logoff_cmd()
     elif cmd == "help":
-      package = self.help_cmd(ID)
+      package = self.help_cmd()
     elif cmd == "shutdown":
       print("Shutting down...")
-      self.shutdown(ID)
+      self.shutdown(self.ID)
     else:
       print("Command does not exist.")
       package = "ERROR"
@@ -83,41 +85,41 @@ class socket_client():
     if package == "ERROR":
       print("Inside if loop for package")
       new_cmd = self.get_cmd()
-      package = self.mng_cmd(new_cmd, ID)
+      package = self.mng_cmd(new_cmd)
       return package
     else:
       print("Returning package from mng_cmd at end")
       print(package)
       return package
 
-  def email_cmd(self, ID):
+  def email_cmd(self):
     recipient = raw_input("Enter email recipient: ")
     subject = raw_input("Enter email subject: ")
     msg  = raw_input("Enter email message: ")
-    package = "{0}:{1}:{2}:{3}:{4}".format(ID, "email", recipient, subject, msg)
+    package = "{0}:{1}:{2}:{3}:{4}".format(self.ID, "email", recipient, subject, msg)
     return self.encode(package)
   
-  def getmsg_cmd(self, ID):
+  def getmsg_cmd(self):
     sender_un = raw_input("Enter email sender: ")
-    package = "{0}:{1}:{2}".format(ID, "getmsg", sender_un)
+    package = "{0}:{1}:{2}".format(self.ID, "getmsg", sender_un)
     return self.encode(package)
 
-  def count_cmd(self, ID):
-    package = "{0}:{1}".format(ID, "count")
+  def count_cmd(self):
+    package = "{0}:{1}".format(self.ID, "count")
     return self.encode(package)
     
-  def deleat_cmd(self,ID):
+  def deleat_cmd(self):
     sender_un = raw_input("Enter sender user name: ")
     subject = raw_input("Enter email subject: ")
-    package = "{0}:{1}:{2}:{3}".format(ID, "delmsg", sender_un, subject)
+    package = "{0}:{1}:{2}:{3}".format(self.ID, "delmsg", sender_un, subject)
     return self.encode(package)
 
-  def dump_cmd(self, ID):
-    package = "{0}:{1}".format(ID, "dump")
+  def dump_cmd(self):
+    package = "{0}:{1}".format(self.ID, "dump")
     return self.encode(package)
   
-  def logoff_cmd(self, ID):
-    package = "{0}:{1}".format(ID, "logoff")
+  def logoff_cmd(self):
+    package = "{0}:{1}".format(self.ID, "logoff")
     print("logoff function called")
     self.logged_on = False
     return self.encode(package)
@@ -126,12 +128,12 @@ class socket_client():
     package = bytes("{0}".format(package))
     return package
   
-  def help_cmd(self, ID):
-    package = "{0}:{1}".format(ID, "help")
+  def help_cmd(self):
+    package = "{0}:{1}".format(self.ID, "help")
     return self.encode(package)
     
-  def shutdown(self, ID):
-    package = "{0}:{1}".format(ID, "logoff")
+  def shutdown(self):
+    package = "{0}:{1}".format(self.ID, "logoff")
     self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     self.sock.connect(self.server_address)
     print("Closing")
@@ -140,25 +142,23 @@ class socket_client():
     
 def main():
   sockip = "localhost"
-  sockport = 8883
+  sockport = 1504
   #for handshake and creating session
   try:
     while True:
       socketObj = socket_client(sockip, sockport)
-      #socketObj.help_cmd()
       un = raw_input("Enter user name: ")
       pw = raw_input("Enter password: ")
       print("Client Socket Opened. Handshake Sent.")
       msg = bytes("{0}:{1}".format(un, pw))
-      #msg = (b"huntc:123")
-      session_ID = socketObj.connect(msg)
+      ID = socketObj.connect(msg)
     
       #for using session
       sessionObj = socket_client(sockip, sockport)
-      sessionObj.session(session_ID)
+      sessionObj.session(ID)
   except:
     print("\nSomething went wrong")
-    socketObj.shutdown(session_ID)
+    socketObj.shutdown()
   
 main()
 

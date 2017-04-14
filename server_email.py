@@ -3,13 +3,14 @@ import sys
 import pickle
 import time
 import random
+from threading import Thread
 
 class socket_server():
   def __init__(self, ip, port):
     self.usernames = {"huntc": "123", "peterm" : "123",  "jamest" : "123", "tuckerm" : "123", "lydiar" : "123", "masterl" : "123", "cassym" : "123"}
     self.accounts = {}
     self.ip = ip
-    self.port = port	
+    self.port = port
     self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     self.server_address = (self.ip, self.port)
     self.sock.bind(self.server_address)
@@ -237,18 +238,19 @@ class Session():
   def logoffcmd(self, connection):
     self.logged_on = False
     connection.send(b"Successfully Logged Off User: " + str(self.un))
-
+    
 def main():
   """
   Create server socket, bind ip and port, create sock_server instace, create accounts dictionary, then listen and connect on request.
   """
   sockip = ("localhost")
-  sockport =(8883)
+  sockport = (1504)
   sock_server = socket_server(sockip, sockport)
   sock_server.create_accounts()
   print("[Socket Server Started on Port " + str(sockport) + "]")
   while True:
     sock_server.sock.listen(1)
-    sock_server.connect()
+    t = Thread(sock_server.connect())
+    t.start()
   
 main()
